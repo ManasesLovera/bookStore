@@ -3,10 +3,9 @@ import { pool } from "../database/postgres";
 import { loginSchema, userSchema } from "../schema/httpSchema";
 import jwt from "jsonwebtoken";
 import { httpGetAllUsersSchema } from "../schema/httpSchema";
-import { z } from 'zod';
 import bcrypt from "bcrypt";
 
-const JWT_SECRET = process.env.SECRET_KEY || "ad1ec83cd259bb0d66d25ab3fdb6b9e4";
+const JWT_SECRET = process.env.SECRET_KEY || "";
 let hashEncrypt = 12;
 
 export const getAllUser = async (req: Request, res: Response) => {
@@ -52,7 +51,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
 
-    // console.error("Error creating user:", error);
+    console.error("Error creating user:", error);
 
     return res.status(500).json({ message: "Internal Erorr Database" });
   }

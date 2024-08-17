@@ -5,7 +5,7 @@ const { Pool } = pkg
 const config = {
   user: 'watercubz',
   host: 'localhost', 
-  password: 'sosadev17',
+  password: 'mypassword',
   database: 'bookStore',
   port: 5432, 
 }
