@@ -1,14 +1,20 @@
-//import { useState } from 'react'
-import './App.css'
-import UserManagement from './pages/UserManagement';
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import UserManagements from './pages/UserManagement';
+import UserResgistration from './pages/UserResgistration';
+import { AppProvider } from './context/AppContext';
 
-function App() {
-
+const App: React.FC = () => {
   return (
-    <>
-      <UserManagement /> 
-    </>
-  )
-}
+    <AppProvider> {}
+      <Router>
+        <Routes>
+          <Route path="/login" element={<UserManagements />} />
+          <Route path="/register" element={<UserResgistration />} />
+        </Routes>
+      </Router>
+    </AppProvider>
+  );
+};
 
-export default App
+export default App;
