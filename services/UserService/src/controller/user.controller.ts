@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { userData } from "../database/userData"
 
-let app = [...userData]
+let users = [...userData]
 
 export const createUser = (req: Request, res: Response) => {
    const {user:newUser} = req.body
@@ -9,7 +9,7 @@ export const createUser = (req: Request, res: Response) => {
     if(!newUser || Object.keys(newUser).length === 0) {
      return res.status(404).json({message: "user not found"})
     }
-    app = newUser
+    users = newUser
 
     res.json(newUser)
    } catch (error) {
@@ -17,12 +17,12 @@ export const createUser = (req: Request, res: Response) => {
    }
 }
 
-export const getAll = (req: Request, res: Response) => {
+export const getAllUser = (req: Request, res: Response) => {
   try {
-   if(!app || app.length === 0) {
+   if(!users || users.length === 0) {
     return res.status(404).json({message: "user not found"})
    }
-   res.json(app)
+   res.json(users)
   } catch (error) {
    return res.status(500).json({message: error})
   }
