@@ -1,6 +1,9 @@
 import Express, {  Request, Response, json } from "express";
 import users from "../src/router/user.routes"
 import { valideMiddleware } from "./middleware/cors";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const app = Express()
 app.use(Express.json())
