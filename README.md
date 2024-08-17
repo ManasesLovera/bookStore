@@ -1,5 +1,14 @@
 # Microservices-based BookStore App
 
+
+## Como iniciar el proyecto:
+
+1) Para correr todos los contenedores con sus servicios, luego de clonar el proyecto, y hacer npm i, haga:
+
+```bash
+npm run start:dev
+```
+
 ##  12 HOURS PROGRAMMING
 
 Iniciando a las 9:30 pm hasta las 9:30 am (O hasta que tu cuerpo aguante)

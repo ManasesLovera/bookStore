@@ -30,5 +30,16 @@ services:
     depends_on:
       - db
 
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    env_file:
+      - .env  
+
 volumes:
   pgdata:
