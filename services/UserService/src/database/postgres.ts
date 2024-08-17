@@ -3,10 +3,10 @@ import pkg from "pg"
 const { Pool } = pkg
 
 const config = {
-  user: 'watercubz',
+  user: 'postgres',
   host: 'localhost', 
-  password: 'mypassword',
-  database: 'bookStore',
+  password: 'watercubzdev17',
+  database: 'postgres',
   port: 5432, 
 }
 console.log(config);

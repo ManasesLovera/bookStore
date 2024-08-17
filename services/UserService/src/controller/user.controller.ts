@@ -4,31 +4,35 @@ import { loginSchema, userSchema } from "../schema/httpSchema";
 import jwt from "jsonwebtoken";
 import { httpGetAllUsersSchema } from "../schema/httpSchema";
 import bcrypt from "bcrypt";
+import { body } from "zod-endpoints";
 
 const JWT_SECRET = process.env.SECRET_KEY || "";
 let hashEncrypt = 12;
 
 export const getAllUser = async (req: Request, res: Response) => {
 
-  const parserResult = httpGetAllUsersSchema.safeParse({
-    headers: req.headers,
-    method: req.method,
-    payload: req.body,
-    route: req.route?.path,
-    queryParameters: req.query
-  })
+  // const parserResult = httpGetAllUsersSchema.safeParse({
+  //   headers: req.headers,
+  //   method: req.method,
+  //   payload: req.body,
+  //   route: req.route?.path,
+  //   queryParameters: req.query
+  // })
 
-  if(!parserResult.success) {
-  return res.status(400).json({
-    message: "Invalidd request data",
-    errors: parserResult.error.errors
-  })
-  }
+  // if(!parserResult.success) {
+  // return res.status(400).json({
+  //   message: "Invalidd request data",
+  //   errors: parserResult.error.errors
+  // })
+  // }
   try {
     const client = await pool.connect();
     const result = await client.query("SELECT * FROM users");
 
-    res.status(200).json(result.rows);
+    res.status(200).json({
+      message: "",
+      users: result.rows
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal Error Database" });
   }
@@ -36,17 +40,24 @@ export const getAllUser = async (req: Request, res: Response) => {
 
 
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
+
+  if(!username || !email || !password) {
+    return res.status(400).json({ message: "Todos los campos son obligatorios." });
+  }
   try {
+     
+    const hashPassword = await bcrypt.hash(password, hashEncrypt);
+
     const response = await pool.query(
-      "INSERT INTO users (name, email, password) VALUES ($1,$2,$3)",
-      [name, email, password]
+      "INSERT INTO users (username, email, password_hash) VALUES ($1,$2,$3)",
+      [username, email, hashPassword]
     );
-    console.log(response);
+    console.log(response.rows[0]);
     res.json({
       message: "User created successfully",
       body: {
-        user: { name, email, password },
+        user: { username, email },
       },
     });
   } catch (error) {
@@ -88,9 +99,9 @@ export const Login = async (req: Request, res: Response) => {
 
 
 export const register = async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!name || !email || !password) {
+  if (!username || !email || !password) {
     return res
       .status(401)
       .json({ message: "Name, email, and password are required" });
@@ -107,8 +118,8 @@ export const register = async (req: Request, res: Response) => {
     const hashPassword = await bcrypt.hash(password, hashEncrypt);
 
     const result = await pool.query(
-      "INSERT INTO users (name, email, password) VALUES ($1,$2,$3) RETURNING *",
-      [name, email, hashPassword]
+      "INSERT INTO users (username, email, password) VALUES ($1,$2,$3) RETURNING *",
+      [username, email, hashPassword]
     );
 
     const newUser = result.rows[0];
@@ -120,7 +131,7 @@ export const register = async (req: Request, res: Response) => {
     res
       .status(201)
       .json({
-        user: { id: newUser.id, name: newUser.name, email: newUser.email },
+        user: { id: newUser.id, username: newUser.username, email: newUser.email },
         token,
       });
   } catch (error) {
