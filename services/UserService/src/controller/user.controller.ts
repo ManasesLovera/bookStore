@@ -3,7 +3,7 @@ import { pool } from "../database/postgres"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
 
-const JWT_SECRET = process.env.SECRET_KEY || "7238ad21dcd7802a527bdb1701b12f89"
+const JWT_SECRET = process.env.SECRET_KEY || "ad1ec83cd259bb0d66d25ab3fdb6b9e4"
 let hashEncrypt = 12
 
 export const getAllUser = async (req: Request, res: Response) => {
