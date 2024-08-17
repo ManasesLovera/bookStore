@@ -1,29 +1,33 @@
 import { Request, Response } from "express"
-import { userData } from "../database/userData"
+import { pool } from "../database/postgres"
 
-let users = [...userData]
+export const getAllUser = async (req: Request, res: Response) => {
+ try {
+  const client =  await pool.connect();
+  const result =  await client.query("SELECT * FROM users")
 
-export const createUser = (req: Request, res: Response) => {
-   const {user:newUser} = req.body
+  res.status(200).json(result.rows)
+ } catch (error) {
+  return res.status(500).json({message: "Internal Error Database"})
+ }
+}
+
+export const createUser = async (req: Request, res: Response) => {
+  const {name, email, password} = req.body
    try {
-    if(!newUser || Object.keys(newUser).length === 0) {
-     return res.status(404).json({message: "user not found"})
-    }
-    users = newUser
-
-    res.json(newUser)
+    const response = await pool.query(
+     "INSER INTO users  (name, email, password) VALUES ($1,$2,$3)",
+     [name, email, password]
+    )
+    console.log(response);
+    res.json({
+     message: "User created successfully",
+     body: {
+      user: {name, email, password}
+     }
+    }) 
    } catch (error) {
-    return res.status(500).json({message: error})
+    return res.status(500).json({message: "Internal Erorr Database"})
    }
 }
 
-export const getAllUser = (req: Request, res: Response) => {
-  try {
-   if(!users || users.length === 0) {
-    return res.status(404).json({message: "user not found"})
-   }
-   res.json(users)
-  } catch (error) {
-   return res.status(500).json({message: error})
-  }
-}
