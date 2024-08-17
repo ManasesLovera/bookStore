@@ -19,3 +19,12 @@ export const loginSchema = z.object({
 export const getUserSchema = z.object({
   id: z.string().uuid('Invalid user ID'),
 });
+
+export const httpGetAllUsersSchema = z.object({
+  headers: z.object({
+    authorization: z.string(),
+  }).strict(),
+  method: z.literal("GET"),
+  route: z.literal("/users"),
+  queryParameters: z.object({}).strict(),
+}).strict();

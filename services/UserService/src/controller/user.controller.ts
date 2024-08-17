@@ -1,15 +1,30 @@
 import { Request, Response } from "express";
 import { pool } from "../database/postgres";
-import { loginSchema, userSchema } from "../schema/userSchema";
+import { loginSchema, userSchema } from "../schema/httpSchema";
 import jwt from "jsonwebtoken";
-import { createEndpoint } from 'zod-endpoint';
+import { httpGetAllUsersSchema } from "../schema/httpSchema";
 import { z } from 'zod';
 import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.SECRET_KEY || "ad1ec83cd259bb0d66d25ab3fdb6b9e4";
 let hashEncrypt = 12;
 
-export const getAllUserHandler = async (req: Request, res: Response) => {
+export const getAllUser = async (req: Request, res: Response) => {
+
+  const parserResult = httpGetAllUsersSchema.safeParse({
+    headers: req.headers,
+    method: req.method,
+    payload: req.body,
+    route: req.route?.path,
+    queryParameters: req.query
+  })
+
+  if(!parserResult.success) {
+  return res.status(400).json({
+    message: "Invalidd request data",
+    errors: parserResult.error.errors
+  })
+  }
   try {
     const client = await pool.connect();
     const result = await client.query("SELECT * FROM users");
@@ -20,13 +35,8 @@ export const getAllUserHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllUser = createEndpoint({
-  method: 'GET',
-  schema: z.object({}), // No hay parámetros de entrada
-  handler: getAllUserHandler,
-});
 
-export const createUserHandler = async (req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   try {
     const response = await pool.query(
@@ -41,17 +51,16 @@ export const createUserHandler = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
+
+    // console.error("Error creating user:", error);
+
     return res.status(500).json({ message: "Internal Erorr Database" });
   }
 };
 
-export const createUser = createEndpoint({
-  method: 'POST',
-  schema: userSchema,
-  handler: createUserHandler,
-});
 
-export const loginHandler = async (req: Request, res: Response) => {
+
+export const Login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
@@ -78,13 +87,8 @@ export const loginHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const Login = createEndpoint({
-  method: 'POST',
-  schema: loginSchema,
-  handler: loginHandler,
-});
 
-export const registerHandler = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
@@ -125,8 +129,3 @@ export const registerHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const register = createEndpoint({
-  method: 'POST',
-  schema: userSchema,
-  handler: registerHandler,
-});

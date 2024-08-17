@@ -12,7 +12,11 @@ valideMiddleware()
 app.use("/api/v1", users)
 
 app.use("/", (req: Request, res: Response) => {
-  res.json("HELLO")
+  res.json(
+    { 
+      "name": "HELLO PEOPLE"
+    }
+  )
  })
 
  const PORT = process.env.PORT ?? 5000
