@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "@types/pg": "^8.11.6",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "pg": "^8.12.0"
   }
 }
