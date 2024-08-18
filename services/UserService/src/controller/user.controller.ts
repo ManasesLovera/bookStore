@@ -37,7 +37,7 @@ export const getAllUser = async (req: Request, res: Response) => {
     const result = await client.query("SELECT * FROM users");
 
     res.status(200).json({
-      message: "",
+      message: "users",
       users: result.rows
     });
   } catch (error) {
