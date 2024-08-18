@@ -9,7 +9,6 @@ const config = {
   database: 'postgres',
   port: 5432, 
 }
-console.log(config);
 
 const pool = new Pool(config)
 

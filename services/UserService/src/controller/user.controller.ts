@@ -10,6 +10,13 @@ const JWT_SECRET = process.env.SECRET_KEY || "";
 let hashEncrypt = 12;
 
 export const getAllUser = async (req: Request, res: Response) => {
+     const Limit = req.query.limit
+
+     const queryLimit = typeof Limit === "string" ? parseInt(Limit, 10) : 10
+
+     if(isNaN(queryLimit)) {
+      return res.status(400).json({ error: 'Invalid limit parameter' });
+     }
 
   // const parserResult = httpGetAllUsersSchema.safeParse({
   //   headers: req.headers,

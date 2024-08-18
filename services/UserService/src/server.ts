@@ -2,12 +2,15 @@ import Express, {  Request, Response } from "express";
 import users from "../src/router/user.routes"
 import { valideMiddleware } from "./middleware/cors";
 import dotenv from "dotenv"
+import morgan from "morgan"
 
 dotenv.config()
 
 const app = Express()
 app.use(Express.json())
-valideMiddleware()
+app.use(valideMiddleware())
+app.use(morgan("combined"))
+
 
 app.use("/api/v1", users)
 
