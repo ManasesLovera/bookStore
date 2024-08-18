@@ -4,19 +4,18 @@ import { loginSchema, userSchema } from "../schema/httpSchema";
 import jwt from "jsonwebtoken";
 import { httpGetAllUsersSchema } from "../schema/httpSchema";
 import bcrypt from "bcrypt";
-import { body } from "zod-endpoints";
 
 const JWT_SECRET = process.env.SECRET_KEY || "";
 let hashEncrypt = 12;
 
 export const getAllUser = async (req: Request, res: Response) => {
-     const Limit = req.query.limit
+    //  const Limit = req.query.limit
 
-     const queryLimit = typeof Limit === "string" ? parseInt(Limit, 10) : 10
+    //  const queryLimit = typeof Limit === "string" ? parseInt(Limit, 10) : 1500
 
-     if(isNaN(queryLimit)) {
-      return res.status(400).json({ error: 'Invalid limit parameter' });
-     }
+    //  if(isNaN(queryLimit)) {
+    //   return res.status(400).json({ error: 'Invalid limit parameter' });
+    //  }
 
   // const parserResult = httpGetAllUsersSchema.safeParse({
   //   headers: req.headers,
@@ -25,7 +24,7 @@ export const getAllUser = async (req: Request, res: Response) => {
   //   route: req.route?.path,
   //   queryParameters: req.query
   // })
-
+ 
   // if(!parserResult.success) {
   // return res.status(400).json({
   //   message: "Invalidd request data",
@@ -42,7 +41,7 @@ export const getAllUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     return res.status(500).json({ message: "Internal Error Database" });
-  }
+  }  
 };
 
 
@@ -50,7 +49,10 @@ export const createUser = async (req: Request, res: Response) => {
   const { username, email, password } = req.body;
 
   if(!username || !email || !password) {
-    return res.status(400).json({ message: "Todos los campos son obligatorios." });
+    return res.status(400).json({ 
+        error: "Missing Required Fields",
+        message: "Both 'username' and 'email' are required fields."
+    });
   }
   try {
      
@@ -142,7 +144,25 @@ export const register = async (req: Request, res: Response) => {
         token,
       });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Erorr Database" });
+    return res.status(500).json({ message: "Internal Erorr  Server" });
   }
 };
 
+ export const getUserProfile = async (req: Request,  res: Response) => {
+     const {username} = req.params
+     try {
+        const result = await pool.query(
+          " SELECT id, username, email, created_at, updated_at FROM users WHERE username = $1",
+          [username]
+        )
+
+        if(result.rows.length === 0) {
+          return res.status(404).json({message: "user not found"})
+        }
+        const user = result.rows[0]
+
+        res.json(user)
+     } catch (error) {
+       res.status(500).json({message: "Internal Error Server"})      
+     }
+ } 
