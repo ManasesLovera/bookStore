@@ -1,16 +1,16 @@
     import express, {Request, Response} from 'express';
-
+   
     import cors from 'cors';
     import gatewayRoutes from './routes/gatewayRoutes';
     // import gatewayRoutes from './routes/gatewayRoutes';
-    // import { config } from './config/config';
+    import { config } from './config/config';
 
 
     const app = express();
     // const port = config.PORT || 3000;
 
     //Following line is temporary, will remove once complete the env file.
-    const port = 3000;
+    const PORT =  config.PORT || 3000 ;
 
     app.use(cors());
     app.use(express.json());
@@ -33,6 +33,6 @@
 
     app.use('/api', gatewayRoutes);
 
-    app.listen(port, () => {
-    console.log(`API Gateway running on port http://localhost:${port}`);
+    app.listen(PORT, () => {
+    console.log(`API Gateway running on port http://localhost:${PORT}`);
     });

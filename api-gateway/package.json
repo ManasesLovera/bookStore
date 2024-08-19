@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/node": "^22.4.0",
     "axios": "^1.7.4",
     "cors": "^2.8.5",

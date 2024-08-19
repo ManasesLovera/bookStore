@@ -8,7 +8,13 @@
 ```bash
 npm run start:dev
 ```
+El comando anterior lo que hare es iniciar los contenedores, si es primera vez que se hace, va a ccomenzar un proceso un poco largo para construir (build) lo que necesita cada contenedor para funcionar. 
 
+2) Para detener todos los contenedores:
+```
+npm run stop:dev
+```
+Este comando se encargara de tumbar todos los contenedores en el proyecto. 
 ##  12 HOURS PROGRAMMING
 
 Iniciando a las 9:30 pm hasta las 9:30 am (O hasta que tu cuerpo aguante)

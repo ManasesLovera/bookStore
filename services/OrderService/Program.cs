@@ -2,9 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
+var port = Environment.GetEnvironmentVariable("ORDERSERVICE_PORT") ?? "5000";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
