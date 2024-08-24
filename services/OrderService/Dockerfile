@@ -21,6 +21,6 @@ WORKDIR /app
 
 COPY --from=build /app/out .
 
-EXPOSE 80
+EXPOSE 3033
 
 ENTRYPOINT ["dotnet", "OrderService.dll"]

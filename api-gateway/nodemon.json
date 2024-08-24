@@ -1,0 +1,13 @@
+{
+    "watch": [
+      "src/**/*",
+      "package.json",
+      "tsconfig.json"
+    ],
+    "ext": "ts,js,json",
+    "ignore": [
+      "dist/**/*"
+    ],
+    "exec": "ts-node src/index.ts"
+  }
+  
