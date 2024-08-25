@@ -11,22 +11,22 @@ import { Navigation } from 'swiper/modules';
 function Cards() {
   const slides = [
     {
-      imageUrl:gameOfThrone ,
-      title: "Harry Potter And The Cursed Child",
-      author: "J.K. Rowling",
-      price: "$40.99",
-    },
-    {
       imageUrl: berserk,
       title: "Lost",
       author: "James Patterson",
       price: "$30.99",
     },
     {
-      imageUrl: brown,
+      imageUrl: gameOfThrone,
       title: "The Sixth Extinction",
       author: "Elizabeth Kolbert",
       price: "$25.99",
+    },
+    {
+      imageUrl: brown,
+      title: "The Last Day",
+      author: "Andrew Hunter Murray",
+      price: "$20.99",
     },
     {
       imageUrl: brown,
