@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
 using OrderService.Interface;
 using OrderService.Models;
 
@@ -5,33 +7,89 @@ namespace OrderService.Repository;
 
 public class BookRepository : IBookRepository
 {
-    public Task<Book> CreateAsync(Book bookModel)
+    private readonly ApplicationDbContext _context;
+
+    public BookRepository(ApplicationDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<Book> DeleteAsync(int id)
+    public async Task<Book> AddStockAsync(int id, int amount)
     {
-        throw new NotImplementedException();
+        var book = await _context.Books.FindAsync(id);
+
+        if (book == null)
+            return null;
+
+        book.Stock += amount;
+        await _context.SaveChangesAsync();
+
+        return book;
     }
 
-    public Task<bool> Exists(int id)
+    public async Task<Book> CreateAsync(Book bookModel)
     {
-        throw new NotImplementedException();
+        await _context.Books.AddAsync(bookModel);
+        await _context.SaveChangesAsync();
+
+        return await GetByIdAsync(bookModel.Id) ?? bookModel;
     }
 
-    public Task<List<Book>> GetAllAsync()
+    public async Task<Book> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var book = await _context.Books.FindAsync(id);
+
+        if (book == null)
+            return null;
+
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
+
+        return book;
     }
 
-    public Task<Book?> GetByIdAsync(int id)
+    public async Task<bool> ExistsAsync(int id)
     {
-        throw new NotImplementedException();
+        var book = await _context.Books.FindAsync(id);
+        return book != null ? true : false;
     }
 
-    public Task<Book> UpdateAsync(int id, Book bookModel)
+    public async Task<List<Book>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Books.ToListAsync();
+    }
+
+    public async Task<Book> GetByIdAsync(int id)
+    {
+        var book = await _context.Books.FindAsync(id);
+        return book;
+    }
+
+    public async Task<Book> RemoveStockAsync(int id, int amount)
+    {
+        var book = await _context.Books.FindAsync(id);
+
+        if (book == null)
+            return null;
+
+        if (book.Stock - amount > 0)
+            book.Stock -= amount;
+
+        return book;
+    }
+
+    public async Task<Book> UpdateAsync(int id, Book bookModel)
+    {
+        var book = await _context.Books.FindAsync(id);
+
+        book.Title = bookModel.Title;
+        book.Author = bookModel.Author;
+        book.Description = bookModel.Description;
+        book.Price = bookModel.Price;
+        book.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return book;
     }
 }
