@@ -4,7 +4,15 @@ export default {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
+      width: {
+        'custom-xl': '90%', 
+        'custom-xxl': '100%'
+      }
+    },
   },
   plugins: [],
 }

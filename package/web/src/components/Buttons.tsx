@@ -4,6 +4,7 @@ interface Buttons {
   type: 'button' | 'submit' | 'reset';
   text: string;
   onClick?: () => void;
+  className?: string;
 }
 
 const Buttons: React.FC<Buttons> = ({ type, text, onClick }) => {
@@ -11,7 +12,7 @@ const Buttons: React.FC<Buttons> = ({ type, text, onClick }) => {
     <button
       type={type}
       onClick={onClick}
-      className="w-48 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+      className="w-48 py-2 bg-cyan-500 text-white font-semibold rounded-md hover:bg-cyan-700 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500"
     >
       {text}
     </button>

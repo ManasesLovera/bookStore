@@ -1,0 +1,32 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  height: 100vh; 
+  --sb-track-color: #ffffff;
+  --sb-thumb-color: #129a98;
+  --sb-size: 11px;
+  --sb-thumb-min-height: 20px; 
+  --sb-thumb-max-height: 50px; 
+}
+
+body::-webkit-scrollbar {
+width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+background: var(--sb-track-color);
+border-radius: 40px;
+}
+
+body::-webkit-scrollbar-thumb {
+background: var(--sb-thumb-color);
+border-radius: 40px;
+min-height: var(--sb-thumb-min-height); 
+max-height: var(--sb-thumb-max-height);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+body {
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  scrollbar-width: thin;
+}
+}
