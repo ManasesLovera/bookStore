@@ -11,7 +11,6 @@ namespace OrderService.Models
 
         public int UserId { get; set; }
         public User User { get; set; }  // User relationship
-
         public string Message { get; set; }
         public string Status { get; set; }
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
