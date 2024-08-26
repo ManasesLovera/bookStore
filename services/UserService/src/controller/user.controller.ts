@@ -1,36 +1,18 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { pool } from "../database/postgres";
-import { loginSchema, userSchema } from "../schema/httpSchema";
+
 import jwt from "jsonwebtoken";
-import { httpGetAllUsersSchema } from "../schema/httpSchema";
+
+const app = express();
+app.use(express.json());
+
 import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.SECRET_KEY || "";
 let hashEncrypt = 12;
 
 export const getAllUser = async (req: Request, res: Response) => {
-    //  const Limit = req.query.limit
-
-    //  const queryLimit = typeof Limit === "string" ? parseInt(Limit, 10) : 1500
-
-    //  if(isNaN(queryLimit)) {
-    //   return res.status(400).json({ error: 'Invalid limit parameter' });
-    //  }
-
-  // const parserResult = httpGetAllUsersSchema.safeParse({
-  //   headers: req.headers,
-  //   method: req.method,
-  //   payload: req.body,
-  //   route: req.route?.path,
-  //   queryParameters: req.query
-  // })
- 
-  // if(!parserResult.success) {
-  // return res.status(400).json({
-  //   message: "Invalidd request data",
-  //   errors: parserResult.error.errors
-  // })
-  // }
+    
   try {
     const client = await pool.connect();
     const result = await client.query("SELECT * FROM users");
@@ -45,37 +27,37 @@ export const getAllUser = async (req: Request, res: Response) => {
 };
 
 
-export const createUser = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+// export const createUser = async (req: Request, res: Response) => {
+//   const { username, email, password } = req.body;
 
-  if(!username || !email || !password) {
-    return res.status(400).json({ 
-        error: "Missing Required Fields",
-        message: "Both 'username' and 'email' are required fields."
-    });
-  }
-  try {
+//   if(!username || !email || !password) {
+//     return res.status(400).json({ 
+//         error: "Missing Required Fields",
+//         message: "Both 'username' and 'email' are required fields."
+//     });
+//   }
+//   try {
      
-    const hashPassword = await bcrypt.hash(password, hashEncrypt);
+//     const hashPassword = await bcrypt.hash(password, hashEncrypt);
 
-    const response = await pool.query(
-      "INSERT INTO users (username, email, password_hash) VALUES ($1,$2,$3)",
-      [username, email, hashPassword]
-    );
-    console.log(response.rows[0]);
-    res.json({
-      message: "User created successfully",
-      body: {
-        user: { username, email },
-      },
-    });
-  } catch (error) {
+//     const response = await pool.query(
+//       "INSERT INTO users (username, email, password_hash) VALUES ($1,$2,$3)",
+//       [username, email, hashPassword]
+//     );
+//     console.log(response.rows[0]);
+//     res.json({
+//       message: "User created successfully",
+//       body: {
+//         user: { username, email },
+//       },
+//     });
+//   } catch (error) {
 
-    console.error("Error creating user:", error);
+//     console.error("Error creating user:", error);
 
-    return res.status(500).json({ message: "Internal Erorr Database" });
-  }
-};
+//     return res.status(500).json({ message: "Internal Erorr Database" });
+//   }
+// };
 
 
 
@@ -108,61 +90,47 @@ export const Login = async (req: Request, res: Response) => {
 
 
 export const register = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, firstname, lastname } = req.body;
+  
 
-  if (!username || !email || !password) {
+  if (!username || !email || !password || !firstname || !lastname) {
     return res
       .status(401)
-      .json({ message: "Name, email, and password are required" });
+      .json({ message: "Missing some information, please check" });
   }
 
   try {
-    const user = await pool.query("SELECT * FROM users WHERE email  = $1", [
-      email,
-    ]);
-    if (user.rows.length > 0) {
-      res.status(400).json({ message: "Email is al ready registered" });
+          console.log('starting postgress process')
+          // res.send({message:'good'});
+          const userEmail = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+          const userUserName = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    if ((userEmail.rows.length > 0) || (userUserName.rows.length > 0)) {
+      res.status(400).json({ message: "Current user information already exist." });
     }
 
     const hashPassword = await bcrypt.hash(password, hashEncrypt);
-
+    console.log('Trying to insert data:::');
     const result = await pool.query(
-      "INSERT INTO users (username, email, password) VALUES ($1,$2,$3) RETURNING *",
-      [username, email, hashPassword]
+      "INSERT INTO users (username, firstname, lastname, email, password_hash) VALUES ($1,$2,$3,$4,$5) RETURNING *",
+      [username, firstname, lastname, email, hashPassword]
     );
 
     const newUser = result.rows[0];
 
-    const token = jwt.sign({ id: newUser.id }, JWT_SECRET, {
-      expiresIn: "24hr",
-    });
-
+    // const token = jwt.sign({ id: newUser.id }, JWT_SECRET, {
+    //   expiresIn: "24hr",
+    // });
+    console.log('USER WAS REGISTER SUCCESFULLY: ', newUser);
     res
       .status(201)
       .json({
-        user: { id: newUser.id, username: newUser.username, email: newUser.email },
-        token,
+        user: {  username: newUser.username, email: newUser.email }
       });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Erorr  Server" });
+    console.log("**********error*********")
+    console.log(error);
+    console.log("**********error*********")
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
- export const getUserProfile = async (req: Request,  res: Response) => {
-     const {username} = req.params
-     try {
-        const result = await pool.query(
-          " SELECT id, username, email, created_at, updated_at FROM users WHERE username = $1",
-          [username]
-        )
-
-        if(result.rows.length === 0) {
-          return res.status(404).json({message: "user not found"})
-        }
-        const user = result.rows[0]
-
-        res.json(user)
-     } catch (error) {
-       res.status(500).json({message: "Internal Error Server"})      
-     }
- } 

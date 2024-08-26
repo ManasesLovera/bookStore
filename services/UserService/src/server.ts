@@ -1,8 +1,10 @@
 import Express, {  Request, Response } from "express";
-import users from "../src/router/user.routes"
+// import users from "../src/router/user.routes"
 import { valideMiddleware } from "./middleware/cors";
 import dotenv from "dotenv"
 import morgan from "morgan"
+import { router } from "./router/user.routes";
+import { register } from "./controller/user.controller";
 
 dotenv.config()
 
@@ -12,18 +14,11 @@ app.use(valideMiddleware())
 app.use(morgan("combined"))
 
 
-app.use("/api/v1", users)
-app.get('/pruebaservicio', (req:Request, res:Response)=>{
-  res.send('servicio de usuario....');
-});
 
-app.use("/", (req: Request, res: Response) => {
-  res.json(
-    { 
-      "name": "HELLO PEOPLE"
-    }
-  )
- })
+
+ app.post("/register", register);
+
+
 
  const PORT = process.env.USERSERVICES_PORT ?? 3031
 
