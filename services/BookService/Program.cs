@@ -1,16 +1,10 @@
+using BookService.Data;
+using BookService.Interface;
+using BookService.Services;
 using Microsoft.EntityFrameworkCore;
-using OrderService.Data;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
-using DotNetEnv;
-using OrderService.Interface;
 using OrderService.Repository;
-using OrderService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-Env.Load();
-var port = Environment.GetEnvironmentVariable("ORDERSERVICE_PORT") ?? "3033";
 
 // Database connection
 // builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -20,16 +14,10 @@ var port = Environment.GetEnvironmentVariable("ORDERSERVICE_PORT") ?? "3033";
 builder.Services.AddDbContext<InMemoryContext>(options =>
     options.UseInMemoryDatabase("InMemoryDatabase"));
 
-// Prevent object cycles
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve
-    );
-
-// Dependency injection for repositories
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
 // Add services to the container.
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+
 builder.Services.AddControllers();
 
 // AutoMapper

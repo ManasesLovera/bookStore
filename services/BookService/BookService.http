@@ -1,0 +1,6 @@
+@BookService_HostAddress = http://localhost:3036
+
+GET {{BookService_HostAddress}}/bookservice/
+Accept: application/json
+
+###

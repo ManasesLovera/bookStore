@@ -1,15 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using OrderService.Data;
-using OrderService.Interface;
-using OrderService.Models;
+using BookService.Data;
+using BookService.Interface;
+using BookService.Models;
 
 namespace OrderService.Repository;
 
 public class BookRepository : IBookRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly InMemoryContext _context;
 
-    public BookRepository(ApplicationDbContext context)
+    public BookRepository(InMemoryContext context)
     {
         _context = context;
     }
@@ -29,8 +29,12 @@ public class BookRepository : IBookRepository
 
     public async Task<Book> CreateAsync(Book bookModel)
     {
-        await _context.Books.AddAsync(bookModel);
-        await _context.SaveChangesAsync();
+        var book = await _context.Books.FindAsync(bookModel.Id);
+
+        if (book == null) {
+            await _context.Books.AddAsync(bookModel);
+            await _context.SaveChangesAsync();
+        }
 
         return await GetByIdAsync(bookModel.Id) ?? bookModel;
     }
@@ -65,6 +69,12 @@ public class BookRepository : IBookRepository
         return book;
     }
 
+    public async Task<Book> GetByTitleAsync(string title)
+    {
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Title.Trim().ToLower() == title.Trim().ToLower());
+        return book;
+    }
+
     public async Task<Book> RemoveStockAsync(int id, int amount)
     {
         var book = await _context.Books.FindAsync(id);
@@ -81,6 +91,9 @@ public class BookRepository : IBookRepository
     public async Task<Book> UpdateAsync(int id, Book bookModel)
     {
         var book = await _context.Books.FindAsync(id);
+
+        if (book == null)
+            return null;
 
         book.Title = bookModel.Title;
         book.Author = bookModel.Author;

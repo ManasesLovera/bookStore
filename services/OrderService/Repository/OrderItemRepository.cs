@@ -1,7 +1,7 @@
 using OrderService.Models;
 using OrderService.Repository;
 
-namespace OrderRepository.Models;
+namespace OrderService.Models;
 
 public class OrderItemRepository : IOrderItemRepository
 {
