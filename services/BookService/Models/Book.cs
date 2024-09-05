@@ -10,7 +10,6 @@ namespace BookService.Models
         public int Stock { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        // SQL Relationship
-        //public ICollection<OrderItem> OrderItems { get; set; }
+        
     }
 }
