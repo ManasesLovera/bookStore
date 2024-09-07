@@ -20,6 +20,6 @@ namespace OrderService.Models
         public DateTime UpdatedAt { get; set; }
         // SQL relationships
         public ICollection<OrderItem> OrderItems { get; set; }
-        public Payment Payment { get; set; }        
+        public Payment Payment { get; set; }
     }
 }

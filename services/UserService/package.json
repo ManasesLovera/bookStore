@@ -3,18 +3,36 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/server.ts"
+    "dev": "ts-node-dev src/server.ts",
+    "build": "tsc",
+    "start": "node build/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
+    "@types/pg": "^8.11.6",
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.12.0",
+    "ts-to-zod": "^3.11.0",
+    "zod": "^3.23.8",
+    "zod-endpoint": "^2.0.0",
+    "zod-endpoints": "^0.1.7"
   }
 }

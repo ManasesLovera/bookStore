@@ -1,42 +1,32 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+body {
+  font-family: 'Poppins', sans-serif;
+  height: 100vh; 
+  --sb-track-color: #ffffff;
+  --sb-thumb-color: #129a98;
+  --sb-size: 11px;
+  --sb-thumb-min-height: 20px; 
+  --sb-thumb-max-height: 50px; 
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body::-webkit-scrollbar {
+width: var(--sb-size);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+body::-webkit-scrollbar-track {
+background: var(--sb-track-color);
+border-radius: 40px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+body::-webkit-scrollbar-thumb {
+background: var(--sb-thumb-color);
+border-radius: 40px;
+min-height: var(--sb-thumb-min-height); 
+max-height: var(--sb-thumb-max-height);
 }
 
-.card {
-  padding: 2em;
+@supports not selector(::-webkit-scrollbar) {
+body {
+  scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  scrollbar-width: thin;
 }
-
-.read-the-docs {
-  color: #888;
 }
