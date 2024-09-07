@@ -1,6 +1,10 @@
 using BookService.Data;
+using BookService.DTOs;
 using BookService.Interface;
 using BookService.Services;
+using BookService.Validations;
+using BookService.Validators;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Repository;
 
@@ -22,6 +26,10 @@ builder.Services.AddControllers();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+//Validations
+builder.Services.AddScoped<IValidator<BookCreateDto>, BookCreateValidator>();
+builder.Services.AddScoped<IValidator<BookUpdateDto>, BookUpdateValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

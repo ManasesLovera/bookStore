@@ -22,6 +22,7 @@ public class BookRepository : IBookRepository
             return null;
 
         book.Stock += amount;
+        book.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return book;
@@ -83,7 +84,11 @@ public class BookRepository : IBookRepository
             return null;
 
         if (book.Stock - amount > 0)
+        { 
             book.Stock -= amount;
+            book.UpdatedAt = DateTime.UtcNow;
+        }
+    
 
         return book;
     }
