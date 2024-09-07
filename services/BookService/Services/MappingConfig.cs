@@ -13,6 +13,7 @@ namespace BookService.Services
         public MappingConfig()
         {
             CreateMap<BookCreateDto, Book>().ReverseMap();
+            CreateMap<BookUpdateDto, Book>().ReverseMap();
         }
     }
 }
