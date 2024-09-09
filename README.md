@@ -76,7 +76,7 @@ Aqui el esquema:
 
 #### **3. Estructura de la Base de Datos**
 
-- **Base de Datos**: MongoDB.
+- **Base de Datos**: PostgreSQL.
     - **Colecciones**:
         - `users`: Almacena los datos de los usuarios.
         - `books`: Contiene la información de los libros.
