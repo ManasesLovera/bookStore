@@ -1,11 +1,12 @@
-using OrderService.Models;
+using BookService.Models;
 
-namespace OrderService.Interface;
+namespace BookService.Interface;
 
 public interface IBookRepository
 {
     Task<List<Book>> GetAllAsync();
     Task<Book> GetByIdAsync(int id);
+    Task<Book> GetByTitleAsync(string title);
     Task<Book> CreateAsync(Book bookModel);
     Task<Book> UpdateAsync(int id, Book bookModel);
     Task<Book> DeleteAsync(int id);
