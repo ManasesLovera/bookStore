@@ -28,7 +28,7 @@ public class OrderItemRepository : IOrderItemRepository
     public async Task<bool> Exists(int id)
     {
         var order = await _context.OrderItems.FirstAsync(x => x.Id == id);
-        return order == null ? true : false;
+        return order == null ? false : true;
     }
 
     public async Task<List<OrderItem>> GetAllAsync()
