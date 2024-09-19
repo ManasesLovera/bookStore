@@ -5,5 +5,5 @@ namespace OrderService.Interface;
 
 public interface IOrderRepository: IGenericRepository<Order>
 {
-   
+
 }
