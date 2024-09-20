@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
+using OrderService.DTOs;
 using OrderService.Interface;
 using OrderService.Models;
 
@@ -14,10 +15,27 @@ public class OrderRepository : IOrderRepository
         _context = context;
     }
 
-    public async Task CreateAsync(Order orderModel)
+    public async Task<Order> CreateAsync(CreateOrderDto createOrderDto)
     {
-        await _context.AddAsync(orderModel);
+        var order = new Order
+        {
+            UserId = createOrderDto.UserId,
+            TotalAmount = createOrderDto.TotalAmount,
+            Status = createOrderDto.Status,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            OrderItems = createOrderDto.OrderItems.Select(item => new OrderItem
+            {
+                BookId = item.BookId,
+                Quantity = item.Quantity,
+                Price = item.Price
+            }).ToList()
+        };
+
+        await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
+
+        return order;
     }
 
     public async Task DeleteAsync(Order order)
@@ -39,8 +57,10 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> GetByIdAsync(int id)
     {
-        var order = await _context.Orders.FindAsync(id);
-        return order;
+        return await _context.Orders
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Book)
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public async Task UpdateAsync(Order orderModel)

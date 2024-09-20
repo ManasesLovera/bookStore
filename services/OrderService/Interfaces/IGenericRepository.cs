@@ -6,7 +6,7 @@ namespace OrderService.Interfaces
     {
         Task<List<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(int id);
-        Task CreateAsync(TEntity entity);
+        Task<TEntity> CreateAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task<bool> Exists(int id);
