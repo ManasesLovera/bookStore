@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Input from '../components/Inputs';
+import {Input} from '../components/Input';
 import Button from '../components/Buttons';
 import { useAppContext } from '../context/AppContext';
 

@@ -83,3 +83,19 @@ Aqui el esquema:
         - `orders`: Registra las órdenes de compra.
         - `payments`: Almacena la información de los pagos.
         - `notifications`: Lleva un historial de las notificaciones enviadas.
+
+## Important endpoints ##
+### **create a new user endpoint** 
+The following URL, is the endpoint responsable to create a new user:
+```
+http://localhost:3000/api/userservices/register
+````
+Here is an example of the data that should be send:
+```js
+{
+  "username": "anyone",
+  "email": "someone@someemail.com",
+  "password": "yourpass",
+  "firstname": "Mr. Someone",
+  "lastname": "Some"
+}
