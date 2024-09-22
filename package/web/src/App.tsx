@@ -1,7 +1,7 @@
 import './App.css'; 
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import UserManagement from './pages/UserManagement';
-import UserRegistration from './pages/UserResgistration'; 
+import {UserRegistration} from './pages/userRegistration/UserResgistration'; 
 import BookList from './pages/BookList'; 
 import Navbar from './pages/Navbar';
 import LandingPage from './landing/LandingPage';

@@ -92,7 +92,7 @@ export const Login = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
   const { username, email, password, firstname, lastname } = req.body;
   
-
+  console.log("req.body>>>>>", req.body)
   if (!username || !email || !password || !firstname || !lastname) {
     return res
       .status(401)
