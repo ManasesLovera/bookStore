@@ -35,23 +35,23 @@ public class BookRepository : IBookRepository
         return await GetByIdAsync(bookModel.Id) ?? bookModel;
     }
 
-    public async Task<Book> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var book = await _context.Books.FindAsync(id);
 
         if (book == null)
-            return null;
+            return false;
 
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
 
-        return book;
+        return true;
     }
 
     public async Task<bool> ExistsAsync(int id)
     {
         var book = await _context.Books.FindAsync(id);
-        return book != null ? true : false;
+        return book != null;
     }
 
     public async Task<List<Book>> GetAllAsync()
@@ -61,8 +61,12 @@ public class BookRepository : IBookRepository
 
     public async Task<Book> GetByIdAsync(int id)
     {
-        var book = await _context.Books.FindAsync(id);
-        return book;
+        return await _context.Books.FindAsync(id);
+    }
+
+    public async Task<Book> GetByTitleAsync(string title)
+    {
+        return await _context.Books.FirstOrDefaultAsync(book => book.Title == title);
     }
 
     public async Task<Book> RemoveStockAsync(int id, int amount)

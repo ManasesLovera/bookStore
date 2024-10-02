@@ -6,6 +6,7 @@ using DotNetEnv;
 using OrderService.Interface;
 using OrderService.Repository;
 using OrderService.Services;
+using OrderService.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,7 @@ builder.Services.AddControllers()
     );
 
 // Dependency injection for repositories
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddPersitence();
 
 // Add services to the container.
 builder.Services.AddControllers();

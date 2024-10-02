@@ -30,14 +30,48 @@ public class BookController : MyControllerBase
             return NotFound();
         }
 
-        return book;
+        return Ok(book);
     }
-    // [HttpPost]
-    // public async Task<ActionResult<Book>> CreateBook([FromBody] BookCreateDto bookDto)
-    // {
-    //     // var bookModel = await _bookRepo.GetByIdAsync(bookDto.
-    //     await _bookRepo.CreateAsync(book);
+    [HttpGet("/title/{title}")]
+    public async Task<ActionResult<Book>> GetBookByTitle(string title)
+    {
+        var book = await _bookRepo.GetByTitleAsync(title);
 
-    //     return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, book);
-    // }
+        if (book == null)
+            return NotFound();
+
+        return Ok(book);
+    }
+    [HttpPost]
+    public async Task<ActionResult<Book>> CreateBook([FromBody] BookCreateDto bookDto)
+    {
+        var bookModel = await _bookRepo.GetByTitleAsync(bookDto.Title);
+
+        if (bookModel != null)
+            return Conflict("Book already exists");
+
+        Book book = new Book() {
+            Description = bookDto.Description,
+            Title = bookDto.Title,
+            Author = bookDto.Author,
+            Price = bookDto.Price,
+            Stock = bookDto.Stock,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+
+        await _bookRepo.CreateAsync(book);
+
+        return CreatedAtAction(nameof(GetBookByTitle), new { id = book.Title }, book);
+    }
+    [HttpDelete("{id:int}")]
+    public async Task<ActionResult> DeleteBookById(int id)
+    {
+        bool result = await _bookRepo.DeleteAsync(id);
+
+        if (!result)
+            return NotFound();
+
+        return Ok(new{ message= "Deleted Successfully!"});
+    }
 }

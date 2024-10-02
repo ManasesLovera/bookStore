@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import Input from '../components/Inputs'; 
+import {Input} from '../components/Input'; 
 
 interface Book {
   title: string;

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
 using OrderService.Models;
 using OrderService.Repository;
 
@@ -5,33 +7,48 @@ namespace OrderService.Models;
 
 public class OrderItemRepository : IOrderItemRepository
 {
-    public Task<OrderItem> CreateAsync(OrderItem orderItemModel)
+
+    private readonly InMemoryContext _context;
+
+    public OrderItemRepository(InMemoryContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<OrderItem> DeleteAsync(int id)
+    public async Task CreateAsync(OrderItem orderItemModel)
     {
-        throw new NotImplementedException();
+        await _context.OrderItems.AddAsync(orderItemModel);
     }
 
-    public Task<bool> Exists(int id)
+    public async Task DeleteAsync(OrderItem orderItemModel)
     {
-        throw new NotImplementedException();
+        _context.Remove(orderItemModel);
     }
 
-    public Task<List<OrderItem>> GetAllAsync()
+    public async Task<bool> Exists(int id)
     {
-        throw new NotImplementedException();
+        var order = await _context.OrderItems.FirstAsync(x => x.Id == id);
+        return order == null ? false : true;
     }
 
-    public Task<OrderItem> GetByIdAsync(int id)
+    public async Task<List<OrderItem>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var orderList = await _context.OrderItems.ToListAsync();
+        return orderList;
     }
 
-    public Task<OrderItem> UpdateAsync(int id, OrderItem orderItemModel)
+    public async Task<OrderItem> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var order = await _context.OrderItems.FindAsync(id);
+        return order;
     }
+
+    public async Task UpdateAsync(OrderItem orderItemModel)
+    {
+        _context.OrderItems.Attach(orderItemModel);
+        _context.OrderItems.Entry(orderItemModel).State = EntityState.Modified;
+    }
+    public async Task Save() =>
+        await _context.SaveChangesAsync();
+
 }

@@ -1,12 +1,15 @@
 import pkg from "pg"
-
+import dotenv from "dotenv"
 const { Pool } = pkg
+dotenv.config()
+
+
 
 const config = {
-  user: '',
-  host: 'localhost', 
-  password: '',
-  database: '',
+  user: process.env.POSTGRES_USER,
+  host: 'db', 
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   port: 5432, 
 }
 
