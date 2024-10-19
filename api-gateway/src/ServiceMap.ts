@@ -16,7 +16,7 @@
     const paymentServicePORT = process.env.PAYMENTSERVICE_PORT || 3034
 
     export const serviceMap:ServicesMapType = {
-        'userservices':`http://localhost:${userServicesPort}`,
+        'userservices':`http://user-service:${userServicesPort}`,
         'bookcatalogservice':`http://localhost:${bookCatalogServicePORT}`,
         'orderservice':`http://order-service:${orderservicePORT}`,
         'notificationservice':`http://localhost${notificationServicePORT}`,

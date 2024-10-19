@@ -40,12 +40,14 @@ namespace OrderService.Data
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
-                .HasForeignKey(o => o.OrderId);
+                .HasForeignKey(o => o.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Book)
                 .WithMany(b => b.OrderItems)
-                .HasForeignKey(o => o.BookId);
+                .HasForeignKey(o => o.BookId)
+                .OnDelete(DeleteBehavior.SetNull);
             
             // SQL relationship one to one: Order -> Payment
             modelBuilder.Entity<Order>()

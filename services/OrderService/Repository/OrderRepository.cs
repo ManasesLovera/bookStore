@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using OrderService.Data;
+using OrderService.DTOs;
 using OrderService.Interface;
 using OrderService.Models;
 
@@ -5,33 +8,68 @@ namespace OrderService.Repository;
 
 public class OrderRepository : IOrderRepository
 {
-    public Task<Order> CreateAsync(Order orderModel)
+    private readonly InMemoryContext _context;
+
+    public OrderRepository(InMemoryContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<Order> DeleteAsync(int id)
+    public async Task<Order> CreateAsync(CreateOrderDto createOrderDto)
     {
-        throw new NotImplementedException();
+        var order = new Order
+        {
+            UserId = createOrderDto.UserId,
+            TotalAmount = createOrderDto.TotalAmount,
+            Status = createOrderDto.Status,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            OrderItems = createOrderDto.OrderItems.Select(item => new OrderItem
+            {
+                BookId = item.BookId,
+                Quantity = item.Quantity,
+                Price = item.Price
+            }).ToList()
+        };
+
+        await _context.Orders.AddAsync(order);
+        await _context.SaveChangesAsync();
+
+        return order;
     }
 
-    public Task<bool> Exists(int id)
+    public async Task DeleteAsync(Order order)
     {
-        throw new NotImplementedException();
+        _context.Remove(order);
+        await _context.SaveChangesAsync();
     }
 
-    public Task<List<Order>> GetAllAsync()
+    public async Task<bool> Exists(int id)
     {
-        throw new NotImplementedException();
+        var order = await _context.Orders.FindAsync(id);
+        return order != null;
     }
 
-    public Task<Order?> GetByIdAsync(int id)
+    public async Task<List<Order>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Orders.ToListAsync();
     }
 
-    public Task<Order> UpdateAsync(int id, Order orderModel)
+    public async Task<Order> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Orders
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Book)
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
+
+    public async Task UpdateAsync(Order orderModel)
+    {
+        _context.Orders.Attach(orderModel);
+        _context.Orders.Entry(orderModel).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task Save() =>
+        await _context.SaveChangesAsync();
 }
