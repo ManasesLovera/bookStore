@@ -315,7 +315,7 @@ The PostgreSQL database schema (`init.sql`) includes ALL required tables:
 
 1. **Fix API Gateway HTTP Method Bug**
    ```typescript
-   // In api-gateway/src/routes/gatewayRoutes.ts, line 34
+   // In api-gateway/src/routes/gatewayRoutes.ts, line 34 (verify current line number)
    // Change from:
    const response = await axios.post(url, req.body);
    
